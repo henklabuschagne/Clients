@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Management - Iframe Embedding Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: #f0f2f5;
+        }
+
+        .test-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .control-panel {
+            width: 300px;
+            background: #1e293b;
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .control-panel h1 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #60a5fa;
+        }
+
+        .control-panel h2 {
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #93c5fd;
+        }
+
+        .control-panel p {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 16px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:active {
+            background: #1d4ed8;
+        }
+
+        .status-indicator {
+            padding: 8px 12px;
+            background: #334155;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .status-indicator.ready {
+            background: #065f46;
+            color: #10b981;
+        }
+
+        .log-container {
+            background: #0f172a;
+            border-radius: 6px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: #64748b;
+            margin-right: 8px;
+        }
+
+        .log-message {
+            color: #cbd5e1;
+        }
+
+        .iframe-container {
+            flex: 1;
+            background: white;
+            position: relative;
+        }
+
+        #client-management-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .size-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .size-controls button {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        .info-box {
+            background: #0f766e;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .code-snippet {
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #cbd5e1;
+            margin-top: 10px;
+            overflow-x: auto;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <h1>🧪 Iframe Test Panel</h1>
+            <p>Test the Client Management application embedded in an iframe.</p>
+
+            <!-- Status Indicator -->
+            <div id="status-indicator" class="status-indicator">
+                ⏳ Waiting for iframe to load...
+            </div>
+
+            <!-- Navigation Controls -->
+            <h2>Navigation</h2>
+            <div class="button-group">
+                <button onclick="navigateIframe('/')">🏠 Home</button>
+                <button onclick="navigateIframe('/clients')">👥 All Clients</button>
+                <button onclick="reloadIframe()">🔄 Reload Iframe</button>
+            </div>
+
+            <!-- Size Controls -->
+            <h2>Iframe Size</h2>
+            <div class="size-controls">
+                <button onclick="setIframeSize('100%', '100%')">Full</button>
+                <button onclick="setIframeSize('80%', '80%')">80%</button>
+                <button onclick="setIframeSize('500px', '600px')">Fixed</button>
+            </div>
+
+            <!-- Test Communication -->
+            <h2>Communication Test</h2>
+            <div class="button-group">
+                <button onclick="sendTestMessage()">📤 Send Test Message</button>
+                <button onclick="requestData()">📥 Request Data</button>
+                <button onclick="clearLogs()">🗑️ Clear Logs</button>
+            </div>
+
+            <!-- Message Log -->
+            <h2>Message Log</h2>
+            <div id="log-container" class="log-container">
+                <div class="log-entry">
+                    <span class="log-time">--:--:--</span>
+                    <span class="log-message">Waiting for messages...</span>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <strong>✅ Iframe Embedding Enabled</strong><br>
+                This application is configured to allow iframe embedding with no restrictions on X-Frame-Options or CSP headers.
+            </div>
+
+            <!-- Integration Code -->
+            <h2>Integration Code</h2>
+            <div class="code-snippet">&lt;iframe 
+  src="your-app-url"
+  style="width:100%;height:100vh"
+  allow="clipboard-read; clipboard-write"
+&gt;&lt;/iframe&gt;</div>
+        </div>
+
+        <!-- Iframe Container -->
+        <div class="iframe-container">
+            <iframe 
+                id="client-management-iframe"
+                src="/"
+                title="Client Management Application"
+                allow="clipboard-read; clipboard-write"
+            ></iframe>
+        </div>
+    </div>
+
+    <script>
+        const iframe = document.getElementById('client-management-iframe');
+        const statusIndicator = document.getElementById('status-indicator');
+        const logContainer = document.getElementById('log-container');
+
+        // Track iframe ready state
+        let isIframeReady = false;
+
+        // Log a message
+        function addLog(message, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `
+                <span class="log-time">${time}</span>
+                <span class="log-message">${message}</span>
+            `;
+            logContainer.insertBefore(entry, logContainer.firstChild);
+
+            // Keep only last 50 entries
+            while (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }
+
+        // Listen for messages from the iframe
+        window.addEventListener('message', function(event) {
+            // In production, verify event.origin
+            console.log('Message received from iframe:', event.data);
+            addLog(`📨 Received: ${JSON.stringify(event.data)}`);
+
+            // Handle different message types
+            if (event.data.type === 'CLIENT_MANAGEMENT_READY') {
+                isIframeReady = true;
+                statusIndicator.className = 'status-indicator ready';
+                statusIndicator.textContent = '✅ Iframe is ready and connected';
+                addLog('✅ Client Management application loaded successfully');
+            }
+
+            if (event.data.type === 'RESIZE') {
+                addLog(`📐 Iframe height changed to ${event.data.height}px`);
+            }
+
+            if (event.data.type === 'NAVIGATE') {
+                addLog(`🧭 Navigation to: ${event.data.path}`);
+            }
+
+            if (event.data.type === 'CLIENT_SELECTED') {
+                addLog(`👤 Client selected: ID ${event.data.clientId}`);
+            }
+        });
+
+        // Send message to iframe
+        function sendToIframe(message) {
+            if (!iframe.contentWindow) {
+                addLog('❌ Error: Iframe not ready', 'error');
+                return;
+            }
+
+            iframe.contentWindow.postMessage(message, '*');
+            addLog(`📤 Sent: ${JSON.stringify(message)}`);
+        }
+
+        // Navigation functions
+        function navigateIframe(path) {
+            iframe.src = path;
+            addLog(`🧭 Navigating to: ${path}`);
+        }
+
+        function reloadIframe() {
+            iframe.src = iframe.src;
+            isIframeReady = false;
+            statusIndicator.className = 'status-indicator';
+            statusIndicator.textContent = '⏳ Reloading iframe...';
+            addLog('🔄 Reloading iframe');
+        }
+
+        // Size controls
+        function setIframeSize(width, height) {
+            const container = iframe.parentElement;
+            container.style.width = width;
+            container.style.height = height;
+            addLog(`📐 Iframe size set to ${width} x ${height}`);
+        }
+
+        // Test communication
+        function sendTestMessage() {
+            sendToIframe({
+                type: 'TEST',
+                message: 'Hello from parent window!',
+                timestamp: Date.now()
+            });
+        }
+
+        function requestData() {
+            sendToIframe({
+                type: 'REQUEST_DATA',
+                dataType: 'clients'
+            });
+        }
+
+        function clearLogs() {
+            logContainer.innerHTML = '<div class="log-entry"><span class="log-time">--:--:--</span><span class="log-message">Logs cleared</span></div>';
+        }
+
+        // Initialize
+        iframe.addEventListener('load', function() {
+            if (!isIframeReady) {
+                addLog('⏳ Iframe DOM loaded, waiting for ready signal...');
+            }
+        });
+
+        addLog('🚀 Test panel initialized');
+        addLog('ℹ️  Open browser console for detailed logs');
+    </script>
+</body>
+</html>

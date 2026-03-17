@@ -1,0 +1,214 @@
+/* Responsive Design Enhancements */
+
+/* Mobile-first responsive breakpoints */
+@media (max-width: 768px) {
+  /* Make sidebar full-width on mobile with slide-out functionality */
+  aside[role="complementary"] {
+    position: fixed;
+    z-index: 50;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  aside[role="complementary"].mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Adjust main content for mobile */
+  main[role="main"] {
+    width: 100%;
+  }
+
+  /* Stack client header elements vertically on mobile */
+  header[data-tour="client-header"] > div {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  header[data-tour="client-header"] .flex.items-center.gap-2 {
+    flex-wrap: wrap;
+  }
+
+  /* Make sections full-width on mobile */
+  section {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+
+  /* Adjust padding for mobile */
+  .px-8 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Make buttons stack on mobile */
+  .flex.gap-2 {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Further mobile optimizations */
+  .text-2xl {
+    font-size: 1.5rem;
+  }
+
+  /* Reduce sidebar width on small mobile */
+  aside[role="complementary"] {
+    width: 100%;
+  }
+
+  /* Make badges smaller on mobile */
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+  }
+
+  /* Adjust table/card layouts for mobile */
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  aside[role="complementary"] {
+    width: 16rem;
+  }
+
+  .px-8 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1920px) {
+  aside[role="complementary"] {
+    width: 24rem;
+  }
+
+  main[role="main"] {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Remove hover effects on touch devices */
+  *:hover {
+    transition: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  /* Hide navigation and unnecessary elements */
+  aside[role="complementary"],
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure content is visible */
+  main[role="main"] {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Expand all sections for printing */
+  section[aria-labelledby] > div {
+    display: block !important;
+  }
+
+  /* Remove borders and shadows for printing */
+  * {
+    box-shadow: none !important;
+    border-color: #ccc !important;
+  }
+
+  /* Page break controls */
+  section {
+    page-break-inside: avoid;
+  }
+
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+
+  button,
+  a {
+    text-decoration: underline;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Screen reader only utility class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip link styling */
+.skip-link:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  z-index: 9999;
+}
